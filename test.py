@@ -1,26 +1,30 @@
 from port import Port
-import yajl as json
-import json
-import socket
+import gevent.socket as socket
+import gevent
 
 
 def test(k):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	sock.connect(("localhost", 50002))
+	sock.connect(("127.0.0.1", 5000))
 
-	port = Port(sock, json.loads, json.dumps)
+	port = Port(sock)
 
-	#s = [("_sub", "c<0")]
-	#port.write(s)
+	s = {"_sub":"c<0"}
+	port.write(s)
 
-	a = [("a", "sadf"), ("b", 10), ("c", -6)]
+	a = {"a":"sadf", "b":10, "c":-6}
 
 	for i in xrange(k):
 		port.write(a)
-		#port.read()
 
 	port.close()
 
 
-for i in xrange(1):
-	test(100000)
+l = []
+for i in xrange(1000):
+	l.append(gevent.spawn(test, 100))
+
+gevent.joinall(l)
+
+
+# test(1000)

@@ -1,36 +1,58 @@
 import struct
 
+def try_import(mlist):
+    for m in mlist:
+        try:
+            return __import__(m)
+        except ImportError:
+            pass
+
+json = try_import(["yajl","czjson","json"])
+
+
+def safe_recv(sock, len):
+    try:
+        buf = sock.recv(len)
+        if buf:
+            return buf
+    except:
+        pass
+    sock.close()
+    return False    
+
+
+def safe_send(sock, buf):
+    try:
+        sock.sendall(buf)
+        return True
+    except:
+        pass
+    sock.close()
+    return False
 
 class Port(object):
     HEADER_STRUCT = ">L"
     HEADER_LEN = struct.calcsize(HEADER_STRUCT)
 
-    def __init__(self, sock, f_loads=lambda x:x, f_dumps=lambda x:x):
+    def __init__(self, sock):
         self._sock = sock
-        self.loads = f_loads
-        self.dumps = f_dumps
 
     def read(self):
-        header = self._sock.recv(self.HEADER_LEN)
-        if len(header) < self.HEADER_LEN:
-            return None
+        header = safe_recv(self._sock, self.HEADER_LEN)
+        if not header: return False
         length = struct.unpack(self.HEADER_STRUCT, header)[0]
         chunks = []
         while length:
-            recv = self._sock.recv(length)
-            if not recv:
-                return None
+            recv = safe_recv(self._sock, length)
+            if not recv: return False
             chunks.append(recv)
             length -= len(recv)
-        return self.loads("".join(chunks))
+        return json.loads("".join(chunks))
 
     def write(self, obj):
-        bytes = self.dumps(obj)
+        bytes = json.dumps(obj)
         msg = struct.pack(self.HEADER_STRUCT, len(bytes)) + bytes
-        self._sock.sendall(msg)
-
-    def getvalue(self):
-        return self._sock.getvalue()
+        return safe_send(self._sock, msg)
 
     def close(self):
         self._sock.close()
