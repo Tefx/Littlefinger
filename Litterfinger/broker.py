@@ -4,7 +4,14 @@ class Sub(object):
 		self.port = port
 
 	def push(self, obj):
-		return self.test(obj) and self.port.write(obj)
+		try:
+			passed = self.test(obj)
+		except:
+			return True
+		if passed:
+			if not self.port.write(obj):
+				return False
+		return True
 
 class Broker(object):
 	def __init__(self):

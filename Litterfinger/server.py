@@ -1,15 +1,14 @@
-import yajl as json
 import broker
 from port import Port
 import gevent
 import gevent.socket as socket
-
+from config import SERVICE_PORT
 
 class Server(object):
     def __init__(self):
         self.broker = broker.Broker()
 
-    def run(self, listen_port):
+    def run(self, listen_port=SERVICE_PORT):
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.listen_socket.bind(("", listen_port))
@@ -28,6 +27,7 @@ class Server(object):
                 self.broker.push(obj)
 
 if __name__ == '__main__':
-    Server().run(5000)
+    from config import SERVICE_PORT
+    Server().run(SERVICE_PORT)
 
 

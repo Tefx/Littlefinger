@@ -16,9 +16,8 @@ def safe_recv(sock, len):
         if buf:
             return buf
     except:
-        pass
-    sock.close()
-    return False    
+        sock.close()
+        return False    
 
 
 def safe_send(sock, buf):
@@ -26,9 +25,8 @@ def safe_send(sock, buf):
         sock.sendall(buf)
         return True
     except:
-        pass
-    sock.close()
-    return False
+        sock.close()
+        return False
 
 class Port(object):
     HEADER_STRUCT = ">L"
