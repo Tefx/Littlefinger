@@ -2,7 +2,7 @@ from sys import path
 path.append('..')
 from sys import argv
 from Litterfinger import Source
-from Litterfinger.tools import const, rand, gen_auto_iter
+from Litterfinger.tools import const, rand, gen_auto_iter, choice
 import time
 
 def obj2str(d):
@@ -10,11 +10,10 @@ def obj2str(d):
 
 if __name__ == '__main__':
 	host = argv[1]
-	config = {"obj":const("ufo-12"),
-			  "x":	rand(-10000, 10000),
-			  "y":	rand(240, 360),
-			  "z":	rand(500, 1000),
-			  "_delta":	rand(1,3)}
+	config = {"city":		const("nanjing"),
+			  "temp":		rand(20,35),
+			  "weather":	choice(["sun", "rain", "cloud", "snow"]),
+			  "_delta":		rand(1,3)}
 	a = gen_auto_iter(config)
 
 	s = Source(host)

@@ -10,10 +10,9 @@ def obj2str(d):
 
 if __name__ == '__main__':
 	host = argv[1]
-	config = {"obj":const("ufo-12"),
-			  "x":	rand(-10000, 10000),
-			  "y":	rand(240, 360),
-			  "z":	rand(500, 1000),
+	config = {"loc":	const("chair_0"),
+			  "presure":rand(0,1000),
+			  "during":	rand(0,10),
 			  "_delta":	rand(1,3)}
 	a = gen_auto_iter(config)
 

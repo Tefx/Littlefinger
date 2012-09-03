@@ -10,6 +10,10 @@ def rand(a, b):
 	while True:
 		yield random.uniform(a, b)
 
+def choice(l):
+	while True:
+		yield random.choice(l)
+
 def const(x):
 	while True:
 		yield x
