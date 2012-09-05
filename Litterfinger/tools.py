@@ -17,7 +17,10 @@ def const(x):
 		yield x
 
 def gen_auto_iter(config):
-	delta = config["_delta"]
+	if "_delta" in config:
+		delta = config["_delta"]
+	else:
+		delta = const(1)
 	while True:
 		yield {x:y.next() for x,y in config.items() if not x == "_delta"}
 		sleep(delta.next())

@@ -7,7 +7,7 @@ sys.path.append("..")
 from PySide.QtCore import QThread, Signal, QObject, QFile
 from PySide.QtGui import QApplication, QListWidgetItem
 from PySide.QtUiTools import QUiLoader
-from Litterfinger.tools import const, rand, gen_auto_iter
+from Litterfinger.tools import const, rand, choice, gen_auto_iter
 from Litterfinger import Source
 
 def obj2str(d):
@@ -42,7 +42,7 @@ class GuiProxy(QThread):
 		if self.source:
 			self.source.terminate()
 			self.source.itemSent.disconnect(self.add_item)
-		config = eval(self.widget.configEdit.toPlainText(), {"const":const, "rand":rand})
+		config = self.get_config()
 		gen_iter = gen_auto_iter(config)
 		host = self.widget.hostAddrEdit.text()
 		source = Source(host)
@@ -50,9 +50,23 @@ class GuiProxy(QThread):
 		self.source.itemSent.connect(self.add_item)
 		self.source.start()
 
+	def get_config(self):
+		pt = self.widget.configEdit.toPlainText()
+		bl = []
+		for line in pt.splitlines():
+			l = line.strip().split("=")
+			var = l[0].strip()
+			val = "".join(l[1:]).strip()
+			bl.append("\"%s\":%s" % (var, val))
+		block = "{%s}" % ",".join(bl)
+		conf = eval(
+				block, 
+				{"const":const, "rand":rand, "choice":choice})
+		return conf
+
 	def add_item(self, text):
 		self.widget.sentWidget.addItem(QListWidgetItem(text))
-		
+
 if __name__ == '__main__':
 	import sys
 	app = QApplication(sys.argv)
