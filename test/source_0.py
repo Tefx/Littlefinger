@@ -11,6 +11,7 @@ def obj2str(d):
 if __name__ == '__main__':
 	host = argv[1]
 	config = {"obj":const("ufo-12"),
+			  "sensor": const("A1"),
 			  "x":	rand(-10000, 10000),
 			  "y":	rand(240, 360),
 			  "z":	rand(500, 1000),
