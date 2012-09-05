@@ -1,9 +1,7 @@
-from gevent import sleep
+from time import sleep
 from port import Port
-import gevent.socket as socket
+import  socket
 from config import SERVICE_PORT
-from gevent.queue import Queue
-import gevent
 import random
 
 def rand(a, b):
@@ -39,22 +37,19 @@ class Source(object):
 
 class Receiver(object):
 	def __init__(self, subs, addr):
-		self.subs = {"_sub":subs}
-		self.queue = Queue()
-		self.listenlet = gevent.spawn(self.listen, addr)
-
-	def listen(self, host):
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		sock.connect((host, SERVICE_PORT))
-		port = Port(sock)
-		port.write(self.subs)
-		while True:
-			res = port.read()
-			if res:
-				self.queue.put(res)
+		sock.connect((addr, SERVICE_PORT))
+		self.port = Port(sock)
+		self.port.write({"_sub":subs})
 
 	def __iter__(self):
 		return self
 
 	def next(self):
-		return self.queue.get()
+		res = self.port.read()
+		if res:
+			return res
+		else:
+			raise StopIteration
+
+
