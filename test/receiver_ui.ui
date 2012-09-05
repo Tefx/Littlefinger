@@ -24,7 +24,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="hostAddrEdit"/>
+      <widget class="QLineEdit" name="hostAddrEdit">
+       <property name="text">
+        <string>210.72.68.189</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
