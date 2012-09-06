@@ -2,7 +2,7 @@
 
 import sys
 sys.path.append("/usr/local/lib/python2.7/site-packages/")
-sys.path.append("/Users/zzm/Desktop/Littlefinger")
+sys.path.append("..")
 
 from PySide.QtCore import QThread, Signal, QObject, QFile
 from PySide.QtGui import QApplication, QListWidgetItem
