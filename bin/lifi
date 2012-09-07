@@ -2,7 +2,7 @@
 
 from sys import path
 path.append('..')
-from Litterfinger import Server
+from Littlefinger import Server
 
 if __name__ == '__main__':
 	Server().run()
